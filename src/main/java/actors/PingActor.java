@@ -3,10 +3,9 @@ package actors;
 import akka.actor.AbstractActor;
 import akka.actor.Props;
 import akka.japi.pf.ReceiveBuilder;
+import model.Host;
 import scala.PartialFunction;
 import service.PingService;
-
-import java.util.function.Supplier;
 
 /**
  * Created by Dawid on 17.05.2016.
@@ -21,9 +20,9 @@ public class PingActor extends AbstractActor {
     }
 
     private PartialFunction pingHost() {
-        return ReceiveBuilder.match(String.class, hostIp -> {
-            boolean reachable = pingService.isReachable(hostIp);
-            System.out.println(hostIp + ": " + reachable);
+        return ReceiveBuilder.match(Host.class, host -> {
+            boolean reachable = pingService.isReachable(host.getIp());
+            System.out.println(host.getName() + " (" + host.getIp() + "): " + reachable);
         }).build();
     }
 
@@ -32,7 +31,6 @@ public class PingActor extends AbstractActor {
     }
 
     public static Props props(PingService pingService) {
-//        Supplier<PingActor> supp = () -> new PingActor(pingService);
         return Props.create(PingActor.class, pingService);
     }
 }

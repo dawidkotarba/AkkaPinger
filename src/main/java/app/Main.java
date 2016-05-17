@@ -7,10 +7,8 @@ import akka.routing.RoundRobinPool;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import configuration.AppModule;
+import service.HostReaderService;
 import service.PingService;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by Dawid on 17.05.2016.
@@ -18,17 +16,15 @@ import java.util.List;
 public class Main {
 
     public static void main(String[] args) {
-        List<String> testList = Arrays.asList(new String[] {"192.168.7.77", "192.168.7.78", "192.168.7.76"});
 
         Injector injector = Guice.createInjector(new AppModule());
         PingService instance = injector.getInstance(PingService.class);
+        HostReaderService hostReaderService = injector.getInstance(HostReaderService.class);
 
         final ActorSystem actorSystem = ActorSystem.create();
-        final ActorRef pingActors = actorSystem.actorOf(new RoundRobinPool(testList.size()).props(PingActor.props(instance)));
+        final ActorRef pingActors = actorSystem.actorOf(new RoundRobinPool(hostReaderService.getHosts().size()).props(PingActor.props(instance)));
 
-        testList.forEach(hostIp -> {
-            pingActors.tell(hostIp, ActorRef.noSender());
-        });
+        hostReaderService.getHosts().stream().forEach(hostIp -> pingActors.tell(hostIp, ActorRef.noSender()));
 
         actorSystem.shutdown();
     }
