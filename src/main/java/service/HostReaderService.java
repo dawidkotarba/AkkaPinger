@@ -9,5 +9,5 @@ import java.util.Set;
  */
 public interface HostReaderService {
 
-    Set<Host> getHosts();
+    Set<Host> getHosts(String hostsFile);
 }
