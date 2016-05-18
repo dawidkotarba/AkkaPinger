@@ -2,10 +2,7 @@ package configuration;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
-import service.HostFileReaderService;
-import service.HostReaderService;
-import service.PingService;
-import service.PingServiceImpl;
+import service.*;
 
 import javax.inject.Singleton;
 
@@ -26,7 +23,13 @@ public class AppModule extends AbstractModule {
 
     @Provides
     @Singleton
-    HostReaderService hostFileReaderServie() {
+    HostReaderService hostFileReaderService() {
         return new HostFileReaderService();
+    }
+
+    @Provides
+    @Singleton
+    ResultLogger resultLogger() {
+        return new ConsoleResultLogger();
     }
 }

@@ -44,6 +44,5 @@ public class HostFileReaderServiceTest {
 
         // when
         underTest.getHosts(hostsFile);
-
     }
 }

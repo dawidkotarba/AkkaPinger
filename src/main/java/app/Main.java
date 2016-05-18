@@ -11,6 +11,7 @@ import configuration.Constants;
 import model.Host;
 import service.HostReaderService;
 import service.PingService;
+import service.ResultLogger;
 
 import java.util.Set;
 
@@ -22,12 +23,14 @@ public class Main {
     public static void main(String[] args) {
 
         Injector injector = Guice.createInjector(new AppModule());
-        PingService instance = injector.getInstance(PingService.class);
+        PingService pingService = injector.getInstance(PingService.class);
+        ResultLogger resultLogger = injector.getInstance(ResultLogger.class);
         HostReaderService hostReaderService = injector.getInstance(HostReaderService.class);
+
         Set<Host> hosts = hostReaderService.getHosts(Constants.HOSTS_FILE);
 
-        final ActorSystem actorSystem = ActorSystem.create();
-        final ActorRef pingActors = actorSystem.actorOf(new RoundRobinPool(hosts.size()).props(PingActor.props(instance)));
+        ActorSystem actorSystem = ActorSystem.create();
+        ActorRef pingActors = actorSystem.actorOf(new RoundRobinPool(hosts.size()).props(PingActor.props(pingService, resultLogger)));
 
         hosts.stream().forEach(hostIp -> pingActors.tell(hostIp, ActorRef.noSender()));
 
