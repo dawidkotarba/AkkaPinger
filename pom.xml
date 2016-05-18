@@ -9,6 +9,7 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <guice.version>4.0</guice.version>
         <akka.version>2.4.4</akka.version>
         <guice.version>4.0</guice.version>
@@ -49,7 +50,6 @@
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
         </dependency>
-
 
     </dependencies>
 
