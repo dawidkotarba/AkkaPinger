@@ -9,5 +9,5 @@ public class Constants {
         // intentionally left blank
     }
 
-    public final static String HOSTS_FILE = "/scripts/hosts.txt";
+    public final static String HOSTS_FILE = "hosts.txt";
 }
